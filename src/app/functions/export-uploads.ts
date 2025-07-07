@@ -38,19 +38,13 @@ export async function exportUploads(
 
   const cursor = pg.unsafe(sql, params as string[]).cursor(2)
 
-  // const csv
-
-  // for await (const rows of cursor) {
-  //   console.log(rows)
-  // }
-
   const csv = stringify({
     delimiter: ',',
     header: true,
     columns: [
       { key: 'id', header: 'ID' },
       { key: 'name', header: 'Name' },
-      { key: 'remote_url', header: 'Remote URL' },
+      { key: 'remote_url', header: 'URL' },
       { key: 'created_at', header: 'Uploaded at' },
     ],
   })
@@ -61,7 +55,7 @@ export async function exportUploads(
     cursor,
     new Transform({
       objectMode: true,
-      transform(chunks: unknown[], encoding, callback) {
+      transform(chunks: unknown[], _encoding, callback) {
         for (const chunk of chunks) {
           this.push(chunk)
         }
